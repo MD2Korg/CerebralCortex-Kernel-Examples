@@ -26,7 +26,7 @@
 from pyspark.sql import functions as F
 from cerebralcortex.cerebralcortex import CerebralCortex
 from cerebralcortex.core.datatypes.datastream import DataStream
-from cerebralcortex.examples.util.data_helper import gen_phone_battery_data, gen_phone_battery_metadata
+from examples.util.data_helper import gen_phone_battery_data, gen_phone_battery_metadata
 
 from cerebralcortex.core.metadata_manager.stream.metadata import Metadata, DataDescriptor, ModuleMetadata
 
@@ -38,7 +38,7 @@ class Examples:
             - perform windowing operation on the stream
             - store windowed data asa new stream
         Args:
-            example_name:
+            example_name: windowing
         """
 
         self.setup_example()
@@ -98,7 +98,9 @@ class Examples:
         # discuss with Zack
         output_stream_index = 0 # TODO: not sure what it is
         input_tokens_list = [0,1,2] # TODO: not sure what it is
-        self.CC.store_window_and_inputs(output_stream_name=self.stream_name,output_stream_index=output_stream_index, input_tokens_list=input_tokens_list)
+
+        # TODO: uncomment this line for mProve
+        # self.CC.store_window_and_inputs(output_stream_name=self.stream_name,output_stream_index=output_stream_index, input_tokens_list=input_tokens_list)
 
         # print 5 samples from windowed data
         samples = windowed_data.take(5)
