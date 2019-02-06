@@ -9,12 +9,16 @@ This directory contains some of the following examples on how to get/save data s
     - Make sure pip version matches Python version 
 * spark 2.4
     - Download and extract [Spark 2.4](https://spark.apache.org/downloads.html)
-    - Edit `SPARK_HOME` in `CerebralCortex-Kernel-Examples/examples/run.sh` to point to the location you extracted Spark to.
+        - `cd ~/`
+        - `wget http://apache.claz.org/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz` 
+        - `tar -xzf spark*.tar.gz`
+    - Spark requires Java-8 installed
+    - Edit `SPARK_HOME` in `CerebralCortex-Kernel-Examples/examples/basic_windowing/run.sh` to point to the location you extracted Spark to.
 	    - ex: `export SPARK_HOME=~/spark-2.4.0-bin/hadoop2.7/` if Spark was extracted to your home directory.
-	- `export PYTHONPATH="${PYTHONPATH}":PATH-OF-MAIN-DIR/CerebralCortex-Kernel-Examples` (This is defined in `CerebralCortex-Kernel-Examples/examples/run.sh`)
+	- `export PYTHONPATH="${PYTHONPATH}":PATH-OF-MAIN-DIR/CerebralCortex-Kernel-Examples` (This is defined in `CerebralCortex-Kernel-Examples/examples/basic_windowing/run.sh`)
 
 * MySQL > 5.7
-    - You might have to set up a MySQL user.
+    - You might have to set up a MySQL user. 
 
 ## Installation
 
@@ -28,7 +32,7 @@ This directory contains some of the following examples on how to get/save data s
 
  
 ## Configure CerebralCortex-Kernel
-* Update MySQL settings in `CerebralCortex-Kernel-Examples/conf/cerebralcortex.yml` file. Please look at the comments on what params shall be updated.
+* Update MySQL settings in `CerebralCortex-Kernel-Examples/conf/cerebralcortex.yml` file, for example, mysql username, password etc.. Please look at the comments on what params shall be updated.
 
 ## How to run the example code?
 * **Import MySQL Database:**
@@ -36,7 +40,7 @@ This directory contains some of the following examples on how to get/save data s
     - `mysql -u MySQL-USERNAME -pMySQL-PASSWORD < cerebralcortex.sql `
 
 * **Run example**    
-    - `cd CerebralCortex-Kernel-Examples/examples`
+    - `cd CerebralCortex-Kernel-Examples/examples/basic_windowing`
     - `sh run.sh`
 
 If everything works well then example code will produce similar output on console as below:
