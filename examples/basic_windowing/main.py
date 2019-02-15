@@ -93,7 +93,7 @@ class Examples:
             .add_dataDescriptor(
             DataDescriptor().set_attribute("description", "average battery values of a window")) \
             .add_module(
-            ModuleMetadata().set_name("cerebralcortex.examples.main").set_attribute("description", "CerebralCortex-kernel example code to window phone battery data").set_author(
+            ModuleMetadata().set_name("cerebralcortex.examples.main").set_version("0.1.2").set_attribute("description", "CerebralCortex-kernel example code to window phone battery data").set_author(
                 "test_user", "test_user@test_email.com"))
 
         if self.CC.save_stream(ds):
