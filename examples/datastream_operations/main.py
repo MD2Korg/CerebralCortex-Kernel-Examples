@@ -75,6 +75,14 @@ class Examples:
 
         """
 
+        streams = self.CC.list_streams()
+        print(streams)
+        # [{'name': 'BATTERY--org.md2k.phonesensor--PHONE', 'version': 1, 'description': [''], 'metadata_hash':.......]
+
+        stream_names = self.CC.search_stream("battery")
+        print(stream_names)
+        #['BATTERY--org.md2k.phonesensor--PHONE', 'BATTERY--org.md2k.phonesensor--PHONE-windowed-data']
+
         # get sample stream data
         ds = self.CC.get_stream(self.stream_name)
         metadata = ds.get_metadata(version=1)
