@@ -80,58 +80,25 @@ class Examples:
 
         # get sample stream data
         ds = self.CC.get_stream(self.stream_name)
-        data = ds.data # this is a pyspark dataframe object
-        metadata = ds.metadata
 
-        # print number of versions of the stream
-        print("\n\n","*"*10, "STREAM VERSION", "*"*10)
-        for md in metadata:
-            print("stream-version:", md.version)
-
-        # pyspark windowing operation
-        # Note: do not include version column in the dataframe. Version is calculated and added by CerebralCortex-Kernel
-        windowed_data = data.groupBy(['user',F.window("timestamp", "1 minute")]).agg(F.avg("battery_level").alias('battery_average'))
-        windowed_data = windowed_data.select(windowed_data.user, windowed_data.window.start.alias("start"), windowed_data.window.end.alias("end"), windowed_data.battery_average)
-
-        #TODO: I am performing operations on spark-dataframe. I do not know how to get all the required information to pass to mProv API.
-        # Error: HTTP response body: {"message":"Missing endpoint: Endpoint {http://mprov.md2k.org}0 or {http://mprov.md2k.org}-_BATTERY--org.md2k.phonesensor--PHONEwBATTERY--org.md2k.phonesensor--PHONE.1 does not exist."}
-        # discuss with Zack
-        output_stream_index = 0 # TODO: not sure what it is
-        input_tokens_list = [0,1,2] # TODO: not sure what it is
-
-        # TODO: uncomment this line for mProve
-        # self.CC.store_window_and_inputs(output_stream_name=self.stream_name,output_stream_index=output_stream_index, input_tokens_list=input_tokens_list)
-
-        # print 5 samples from windowed data
-        samples = windowed_data.take(5)
-        print("\n\n","*"*10, "STREAM DATA", "*"*10)
-        for sample in samples:
-            print("User-ID:",sample.user,"Start-time:", sample.start, "End-time:", sample.end, "Average-battery-levels:", sample.battery_average)
+        ds.window(windowDuration=60)
+        ds.show(5)
 
         # save newly create data as a new stream in cerebralcortex
         new_stream_name = "BATTERY--org.md2k.phonesensor--PHONE-windowed-data"
 
-        # create metadata for the new stream
-        stream_metadata = Metadata()
-
-        # Note: do not include version column in the dataframe. Version is calculated and added by CerebralCortex-Kernel
-        stream_metadata.set_name(new_stream_name).set_description("1 minute windowed data of phone battery with average battery levels of each window.") \
+        ds.metadata.set_name(new_stream_name).set_description("1 minute windowed data of phone battery with average battery levels of each window.") \
             .add_dataDescriptor(
-            DataDescriptor().set_attribute("description", "start time of a window")) \
-            .add_dataDescriptor(
-            DataDescriptor().set_attribute("description", "end time of a window")) \
+            DataDescriptor().set_attribute("description", "start/end time of a window")) \
             .add_dataDescriptor(
             DataDescriptor().set_attribute("description", "average battery values of a window")) \
             .add_module(
             ModuleMetadata().set_name("cerebralcortex.examples.main").set_attribute("description", "CerebralCortex-kernel example code to window phone battery data").set_author(
                 "test_user", "test_user@test_email.com"))
 
-        # check whether metadata is valid and then store the datastream
-        print("\n\n","*"*10, "STORING NEW STREAM DATA", "*"*10)
-        if stream_metadata.is_valid():
-            new_ds = DataStream(windowed_data, stream_metadata)
-            if self.CC.save_stream(new_ds):
-                print(new_stream_name, "has been stored.\n\n")
+        if self.CC.save_stream(ds):
+            print(new_stream_name, "has been stored.\n\n")
+
 
 
 if __name__=="__main__":

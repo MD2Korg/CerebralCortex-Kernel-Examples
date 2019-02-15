@@ -46,18 +46,16 @@ This directory contains some of the following examples on how to get/save data s
 If everything works well then example code will produce similar output on console as below:
 
 ``` 
- ********** STREAM VERSION **********
-stream-version: 1
-
-
- ********** STREAM DATA **********
-User-ID: 00000000-afb8-476e-9872-6472b4e66b68 Start-time: 2019-01-09 11:35:00 End-time: 2019-01-09 11:36:00 Average-battery-levels: 100.0
-User-ID: 00000000-afb8-476e-9872-6472b4e66b68 Start-time: 2019-01-09 11:41:00 End-time: 2019-01-09 11:42:00 Average-battery-levels: 96.58333333333333
-User-ID: 00000000-afb8-476e-9872-6472b4e66b68 Start-time: 2019-01-09 11:43:00 End-time: 2019-01-09 11:44:00 Average-battery-levels: 95.23333333333333
-User-ID: 00000000-afb8-476e-9872-6472b4e66b68 Start-time: 2019-01-09 11:38:00 End-time: 2019-01-09 11:39:00 Average-battery-levels: 98.28333333333333
-User-ID: 00000000-afb8-476e-9872-6472b4e66b68 Start-time: 2019-01-09 11:39:00 End-time: 2019-01-09 11:40:00 Average-battery-levels: 97.93333333333334
-
-
- ********** STORING NEW STREAM DATA **********
-BATTERY--org.md2k.phonesensor--PHONE-windowed-data has been stored.
+ +--------------------+--------------------+--------------------+
+ |                user|              window|       battery_level|
+ +--------------------+--------------------+--------------------+
+ |00000000-afb8-476...|[2019-01-09 11:35...|[100, 100, 100, 1...|
+ |00000000-afb8-476...|[2019-01-09 11:41...|[97, 97, 97, 97, ...|
+ |00000000-afb8-476...|[2019-01-09 11:43...|[96, 96, 96, 96, ...|
+ |00000000-afb8-476...|[2019-01-09 11:38...|[99, 99, 99, 99, ...|
+ |00000000-afb8-476...|[2019-01-09 11:39...|[98, 98, 98, 98, ...|
+ +--------------------+--------------------+--------------------+
+ only showing top 5 rows
+ 
+ BATTERY--org.md2k.phonesensor--PHONE-windowed-data has been stored.
 ```
