@@ -27,7 +27,7 @@ from pyspark.sql import functions as F
 from cerebralcortex.cerebralcortex import CerebralCortex
 from cerebralcortex.core.datatypes.datastream import DataStream
 from examples.util.data_helper import gen_phone_battery_data, gen_phone_battery_metadata
-
+import sys
 from cerebralcortex.core.metadata_manager.stream.metadata import Metadata, DataDescriptor, ModuleMetadata
 
 class Examples:
@@ -117,13 +117,13 @@ class Examples:
         # Note: do not include version column in the dataframe. Version is calculated and added by CerebralCortex-Kernel
         stream_metadata.set_name(new_stream_name).set_description("1 minute windowed data of phone battery with average battery levels of each window.") \
             .add_dataDescriptor(
-            DataDescriptor().set_name("start_time").set_type("datetime").set_attribute("description", "start time of a window")) \
+            DataDescriptor().set_attribute("description", "start time of a window")) \
             .add_dataDescriptor(
-            DataDescriptor().set_name("end_time").set_type("datetime").set_attribute("description", "end time of a window")) \
+            DataDescriptor().set_attribute("description", "end time of a window")) \
             .add_dataDescriptor(
-            DataDescriptor().set_name("battery_average").set_type("float").set_attribute("description", "average battery values of a window")) \
+            DataDescriptor().set_attribute("description", "average battery values of a window")) \
             .add_module(
-            ModuleMetadata().set_name("cerebralcortex.examples.main").set_version("0.0.1").set_attribute("description", "CerebralCortex-kernel example code to window phone battery data").set_author(
+            ModuleMetadata().set_name("cerebralcortex.examples.main").set_attribute("description", "CerebralCortex-kernel example code to window phone battery data").set_author(
                 "test_user", "test_user@test_email.com"))
 
         # check whether metadata is valid and then store the datastream
