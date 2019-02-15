@@ -59,3 +59,6 @@ If everything works well then example code will produce similar output on consol
  
  BATTERY--org.md2k.phonesensor--PHONE-windowed-data has been stored.
 ```
+
+### More Examples:
+Please have a look at other examples on basic usage of cerebralcortex-kernel in `CerebralCortex-Kernel-Examples/examples/datastream_operations`
