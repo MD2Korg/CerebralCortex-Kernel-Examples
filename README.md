@@ -17,8 +17,13 @@ This directory contains some of the following examples on how to get/save data s
 	    - ex: `export SPARK_HOME=~/spark-2.4.0-bin/hadoop2.7/` if Spark was extracted to your home directory.
 	- `export PYTHONPATH="${PYTHONPATH}":PATH-OF-MAIN-DIR/CerebralCortex-Kernel-Examples` (This is defined in `CerebralCortex-Kernel-Examples/examples/basic_windowing/run.sh`)
 
-* MySQL > 5.7
+* MySQL > 5.7 (distribution version)
     - You might have to set up a MySQL user. 
+    - check your MySQL version 
+        ```
+          $ mysql --version
+          mysql  Ver 14.14 Distrib 5.7.25, for Linux (x86_64) using  EditLine wrapper
+          ```
 
 ## Installation
 
