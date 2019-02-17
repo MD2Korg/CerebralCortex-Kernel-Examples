@@ -13,11 +13,8 @@ This directory contains some of the following examples on how to get/save data s
         - `wget http://apache.claz.org/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz` 
         - `tar -xzf spark*.tar.gz`
     - Spark requires Java-8 installed
-    - Edit `SPARK_HOME` in `CerebralCortex-Kernel-Examples/examples/basic_windowing/run.sh` to point to the location you extracted Spark to.
-	    - ex: `export SPARK_HOME=~/spark-2.4.0-bin/hadoop2.7/` if Spark was extracted to your home directory.
-	- `export PYTHONPATH="${PYTHONPATH}":PATH-OF-MAIN-DIR/CerebralCortex-Kernel-Examples` (This is defined in `CerebralCortex-Kernel-Examples/examples/basic_windowing/run.sh`)
 
-* MySQL > 5.7 (distribution version)
+* MySQL > 5.7 (distribution number)
     - You might have to set up a MySQL user. 
     - check your MySQL version 
         ```
@@ -44,7 +41,10 @@ This directory contains some of the following examples on how to get/save data s
     - `cd CerebralCortex-Kernel-Examples/resources/db`
     - `mysql -u MySQL-USERNAME -pMySQL-PASSWORD < cerebralcortex.sql `
 
-* **Run example**    
+* **Run example**
+    
+    - Edit `SPARK_HOME` in `CerebralCortex-Kernel-Examples/examples/basic_windowing/run.sh` to point to the location you extracted Spark to.
+	- update paths in run.sh. Replace `MAIN-DIR-PATH` with actual paths of spark and where you cloned `CerebralCortex-Kernel-Examples`.
     - `cd CerebralCortex-Kernel-Examples/examples/basic_windowing`
     - `sh run.sh`
 
