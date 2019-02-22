@@ -24,11 +24,13 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from pyspark.sql import functions as F
-from cerebralcortex.cerebralcortex import CerebralCortex
-from cerebralcortex.core.datatypes.datastream import DataStream
+#from cerebralcortex.cerebralcortex import CerebralCortex
+from cerebralcortex import Kernel
+from cerebralcortex.core.datatypes import DataStream
 from examples.util.data_helper import gen_phone_battery_data, gen_phone_battery_metadata
 import sys
 from cerebralcortex.core.metadata_manager.stream.metadata import Metadata, DataDescriptor, ModuleMetadata
+
 
 class Examples:
     def __init__(self, example_name):
@@ -55,7 +57,7 @@ class Examples:
             - save sample stream using cerebralcortex-kernel.
         """
         # create cerebralcortex object
-        self.CC = CerebralCortex("../../conf/")
+        self.CC = Kernel("../../conf/")
 
         # sample data params
         self.stream_name="BATTERY--org.md2k.phonesensor--PHONE"

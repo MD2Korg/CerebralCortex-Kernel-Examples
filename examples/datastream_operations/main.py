@@ -23,8 +23,8 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from cerebralcortex.cerebralcortex import CerebralCortex
-from cerebralcortex.core.datatypes.datastream import DataStream
+from cerebralcortex import Kernel
+from cerebralcortex.core.datatypes import DataStream
 from examples.util.data_helper import gen_phone_battery_data, gen_phone_battery_metadata
 
 
@@ -52,7 +52,7 @@ class Examples:
             - save sample stream using cerebralcortex-kernel.
         """
         # create cerebralcortex object
-        self.CC = CerebralCortex("../../conf/")
+        self.CC = Kernel("../../conf/")
 
         # sample data params
         self.stream_name="BATTERY--org.md2k.phonesensor--PHONE"
