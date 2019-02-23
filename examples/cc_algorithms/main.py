@@ -24,7 +24,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from cerebralcortex import Kernel
-from cerebralcortex.core.algorithms import get_gps_clusters
+from cerebralcortex.algorithms import get_gps_clusters
 
 '''
 Note: this example requires GPS stream data to work.
