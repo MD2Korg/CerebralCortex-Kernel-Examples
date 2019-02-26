@@ -24,7 +24,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from cerebralcortex import Kernel
-from cerebralcortex.algorithms import get_gps_clusters
+from cerebralcortex.algorithms import gps_clusters
 
 '''
 Note: this example requires GPS stream data to work.
@@ -38,7 +38,7 @@ CC = Kernel("../../conf/")
 gps_stream = CC.get_stream("LOCATION--org.md2k.phonesensor--PHONE")
 
 # apply GPS clustering algorithm
-centroids = gps_stream.groupby("owner").marker(get_gps_clusters)
+centroids = gps_stream.groupby("owner").compute(gps_clusters)
 
 # print the centroids
 print("*"*10, " CLUSTER CENTROIDS COORDINATES ", "*"*10)
