@@ -42,4 +42,4 @@ centroids = gps_stream.groupby("owner").compute(gps_clusters)
 
 # print the centroids
 print("*"*10, " CLUSTER CENTROIDS COORDINATES ", "*"*10)
-centroids.data.show(truncate=False)
+centroids.show(truncate=False)
