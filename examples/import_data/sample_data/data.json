@@ -1,19 +1,71 @@
 {
-  "name": "sample-data-stream",
-  "description": "This is a sample stream used for example on how to import data into cc-kernel.",
+  "name": "demo-location-data-stream",
+  "description": "this is a demo location gps coordinates stream. all coordinates belong to memphis, tn..",
   "data_descriptor": [
     {
-      "name": "info",
-      "type": "str",
+      "type": "double",
+      "name": "Latitude",
       "attributes": {
-        "description": "information about sample value."
+        "frequency": "1.0",
+        "description": "latitude, in degrees",
+        "min_value": "-90",
+        "max_value": "90",
+        "unit": "degree"
       }
     },
     {
-      "name": "example_value",
       "type": "double",
+      "name": "Longitude",
       "attributes": {
-        "description": "some sample values."
+        "frequency": "1.0",
+        "description": "longitude, in degrees",
+        "min_value": "-180",
+        "max_value": "180",
+        "unit": "degree"
+      }
+    },
+    {
+      "type": "double",
+      "name": "Altitude",
+      "attributes": {
+        "frequency": "1.0",
+        "description": "get the altitude if available, in meters above the wgs 84 reference ellipsoid",
+        "min_value": "0",
+        "max_value": "1000",
+        "unit": "meters"
+      }
+    },
+    {
+      "type": "double",
+      "name": "Speed",
+      "attributes": {
+        "frequency": "1.0",
+        "description": "speed over ground",
+        "min_value": "0",
+        "max_value": "500",
+        "unit": "meter/second"
+      }
+    },
+    {
+      "type": "double",
+      "name": "Bearing",
+      "attributes": {
+        "frequency": "1.0",
+        "description": "bearing is the horizontal direction of travel of this device, and is not related to the device orientation",
+        "min_value": "0",
+        "max_value": "360",
+        "unit": "degree"
+      }
+    },
+    {
+      "type": "double",
+      "name": "Accuracy",
+      "attributes":{
+      "frequency": "1.0",
+      "description": "get the estimated accuracy of this location, in meters",
+      "min_value": "0",
+      "max_value": "100",
+      "unit": "radius"
       }
     }
   ],
@@ -24,7 +76,7 @@
       "name": "cc_examples.import_data",
       "version": "2.0.5",
       "authors": [{
-        "name": "Demo",
+        "name": "demo",
         "email": "demo@demo.com"
       }],
       "attributes": {

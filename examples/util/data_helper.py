@@ -24,7 +24,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from datetime import datetime, timedelta
-
+import random
 from cerebralcortex.core.metadata_manager.stream.metadata import Metadata, DataDescriptor, ModuleMetadata
 from cerebralcortex.core.util.spark_helper import get_or_create_sc
 
@@ -68,3 +68,21 @@ def gen_phone_battery_metadata(stream_name)->Metadata:
             "test_user", "test_user@test_email.com"))
     stream_metadata.is_valid()
     return stream_metadata
+
+def gen_location_data():
+    """
+    Memphis, TN, lat, long, alt coordinates
+    """
+    lat = [35.1247391,35.1257391,35.1217391,35.1117391,35.1317391,35.1287391,35.5217391]
+    long = [-89.9750021,-89.9710021,-89.9800021,-89.9670021,-89.9790021,-89.9710021,-89.8700021]
+    alt = [83.0,84.0, 85.0, 86.0,87.0,88.0, 89.0]
+    for dp in range(50):
+        lat_val = str(random.choice(lat))
+        long_val = str(random.choice(long))
+        alt_val = str(random.choice(alt))
+        ts_val = str(15094)+str((16272882+(dp*1000000)))
+        speed_val = str(round(random.uniform(0.0,5.0),6))
+        bearing_val = str(round(random.uniform(0.0,350),6))
+        accuracy_val = str(round(random.uniform(50.0, 74.4),6))
+        all_dps = ",".join([ts_val, lat_val, long_val, alt_val, speed_val, bearing_val, accuracy_val])
+        print(all_dps)

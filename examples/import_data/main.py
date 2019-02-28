@@ -30,9 +30,21 @@ from cerebralcortex.data_importer import import_dir
 import_dir(
     cc_config="../../conf/",
     input_data_dir="sample_data/",
-    user_id=123,
+    user_id='976b5f6f-d8d3-47fc-af6a-5ba805918e6d',
     header=None,
     data_file_extension=[".csv"],
     data_parser=csv_data_parser,
     gen_report=True
 )
+
+###             UNCOMMENT BELOW CODE TO VIEW INGESTED SAMPLE STREAM             ###
+
+# from cerebralcortex import Kernel
+#
+# # create CC Kernel object
+# CC = Kernel("../../conf/")
+#
+# # get stream data
+# gps_stream = CC.get_stream("demo-location-data-stream")
+#
+# gps_stream.show(truncate=False)
