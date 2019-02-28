@@ -1,0 +1,32 @@
+{
+  "name": "sample-data-stream",
+  "description": "This is a sample stream used for example on how to import data into cc-kernel.",
+  "data_descriptor": [
+    {
+      "name": "info",
+      "data_type": "str",
+      "description": "information about sample value."
+    },
+    {
+      "name": "example_value",
+      "data_type": "double",
+      "description": "some sample values."
+    }
+  ],
+  "input_streams": [],
+  "annotation": [],
+  "module": [
+    {
+      "name": "cc_examples.import_data",
+      "version": "2.0.5",
+      "authors": [{
+        "name": "Demo",
+        "email": "demo@demo.com"
+      }],
+      "attributes": {
+        "reference": [],
+        "description": "data importer."
+      }
+    }
+  ]
+}
