@@ -4,18 +4,22 @@
   "data_descriptor": [
     {
       "name": "info",
-      "data_type": "str",
-      "description": "information about sample value."
+      "type": "str",
+      "attributes": {
+        "description": "information about sample value."
+      }
     },
     {
       "name": "example_value",
-      "data_type": "double",
-      "description": "some sample values."
+      "type": "double",
+      "attributes": {
+        "description": "some sample values."
+      }
     }
   ],
   "input_streams": [],
   "annotation": [],
-  "module": [
+  "modules": [
     {
       "name": "cc_examples.import_data",
       "version": "2.0.5",

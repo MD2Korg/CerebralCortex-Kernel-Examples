@@ -30,12 +30,9 @@ from cerebralcortex.data_importer import import_dir
 import_dir(
     cc_config="../../conf/",
     input_data_dir="sample_data/",
-    batch_size=20,
-    #compression='gzip',
+    user_id=123,
     header=None,
-    data_file_extension=[".gz"],
-    # allowed_filename_pattern="REGEX PATTERN",
+    data_file_extension=[".csv"],
     data_parser=csv_data_parser,
-    #metadata_parser=parse_mcerebrum_metadata,
     gen_report=True
 )
