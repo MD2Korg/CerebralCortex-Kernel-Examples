@@ -52,7 +52,8 @@ CREATE TABLE `ingestion_logs` (
   `stream_name` varchar(255) NOT NULL,
   `file_path` varchar(255) NOT NULL,
   `fault_type` varchar(100) NOT NULL,
-  `fault_description` text NOT NULL
+  `fault_description` text NOT NULL,
+  `success` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -131,6 +132,7 @@ ALTER TABLE `data_replay`
 --
 ALTER TABLE `ingestion_logs`
   ADD PRIMARY KEY (`row_id`),
+  ADD UNIQUE KEY `file_path_2` (`file_path`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `stream_name` (`stream_name`),
   ADD KEY `file_path` (`file_path`),
@@ -171,7 +173,7 @@ ALTER TABLE `data_replay`
 -- AUTO_INCREMENT for table `ingestion_logs`
 --
 ALTER TABLE `ingestion_logs`
-  MODIFY `row_id` int(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `row_id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
 --
 -- AUTO_INCREMENT for table `kafka_offsets`
 --
@@ -181,9 +183,9 @@ ALTER TABLE `kafka_offsets`
 -- AUTO_INCREMENT for table `stream`
 --
 ALTER TABLE `stream`
-  MODIFY `row_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `row_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `row_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `row_id` int(5) NOT NULL AUTO_INCREMENT;
