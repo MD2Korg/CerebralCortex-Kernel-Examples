@@ -5,7 +5,7 @@ In this example:
     - Authenticate a user
     - Register a new stream (`accelerometer--org.md2k.phonesensor--phone`)
     - Upload sample data
- - Pyspark-Kafka direct stream is created
+ - Create Pyspark-Kafka direct stream
  - Read parquet data and convert it into pandas dataframe
  - Add gaussian noise in sample data
  - Store noisy data as a new stream
