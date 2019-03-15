@@ -1,11 +1,15 @@
 # CerebralCortex-kernel - Spark Streaming Example
 CerebralCortex accepts data from mCerebrum, process files, store data, and publish newly stored file names on Kafka message queue.
 In this example:
+ - Example code makes call to CerebralCortex-APIServer to:
+    - Authenticate a user
+    - Register a new stream (`accelerometer--org.md2k.phonesensor--phone`)
+    - Upload sample data
  - Pyspark-Kafka direct stream is created
  - Read parquet data and convert it into pandas dataframe
- - Gaussian noise is added in sample data
- - Noisy data is stored as a new stream
- - Noisy and clean data is retrieved and printed on console
+ - Add gaussian noise in sample data
+ - Store noisy data as a new stream
+ - Retrieve and print noisy/clean data streams
 
 ## Dependencies
 * [Python3.6](https://www.python.org/downloads/release/python-360/) 
