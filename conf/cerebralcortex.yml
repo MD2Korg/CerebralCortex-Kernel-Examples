@@ -19,7 +19,7 @@ filesystem:
 #hdfs:
 #  host: localhost
 #  port: 9001
-#  raw_files_dir: "cerebralcortex/cerebralcortex/"
+#  raw_files_dir: "cerebralcortex/"
 
 #########################################################################
 #                        OBJECT Storage                                 #
@@ -28,15 +28,6 @@ filesystem:
 object_storage:
   object_storage_path: "../../resources/sample_data/"
 
-#minio: # AWS-S3 UPDATE
-#  host: s3.amazonaws.com # for amazon pass s3.amazonaws.com and for minio simpley pass url of minio server
-#  port: 9000
-#  access_key: ''
-#  secret_key: ''
-#  input_bucket_name: 'cerebralcortex-mperf' # required for aws-s3
-#  output_bucket_name: 'cerebralcortex-mperf-output' # required for aws-s3
-#  dir_prefix: 'cerebralcortex/data/'
-#  secure: False #ssl
 
 #########################################################################
 #                          Relational Storage                           #
@@ -50,43 +41,49 @@ mysql:
   db_pass: pass # Change
 
   # Note: do not change following parameters if you don't know what you are doing
-  connection_pool_name: "CC_Pool"
-  connection_pool_size: 1
   database: cerebralcortex
-  datastream_table: stream
-  kafka_offsets_table: kafka_offsets
-  processing_module_table: processing_module
-  data_replay_table: data_replay
-  user_table: user
-  study_table: study
+  connection_pool_size: 1
 
 #########################################################################
 ###################### Visualization Data Storage #######################
 #########################################################################
-visualization_storage: none
+visualization_storage: influxdb
 
-#influxdb:
-#  host: 127.0.0.1
-#  port: 8086
-#  database: cerebralcortex_raw
-#  db_user: ""
-#  db_pass: ""
+influxdb:
+  host: 127.0.0.1
+  port: 8086
+  database: cerebralcortex_raw
+  db_user: ""
+  db_pass: ""
 
 #########################################################################
 ########################### Messaging Service ###########################
 #########################################################################
-messaging_service: none
+messaging_service: kafka
 
-#kafka:
-#  host: 127.0.0.1
-#  port: 9092
+kafka:
+  host: 127.0.0.1
+  port: 9092
+  # ping__kafka: how often CC-kafka shall check for new messages (in seconds)
+  ping_kafka: 5
+  consumer_group_id: "md2k-data-ingestion"
+
+#########################################################################
+#                          SPARK CONFIGS                                #
+#########################################################################
+# Do not change if you do not know what you are doing
+# TODO
+#spark:
+#  host:
+#  enable_gui: True
+#  master:
 
 #########################################################################
 #                          Data Provenance Storage                      #
 #########################################################################
 provenance: none
 
-#mprove:
+mprove:
 #  host: 127.0.0.1 # change if MySQL is installed remotely
 #  port: 8088 # Change if MySQL is not using default port
 #  username: 'sample' # Change

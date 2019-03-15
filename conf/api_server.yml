@@ -2,9 +2,6 @@
 ################ CerebralCortex API SERVER Config #######################
 #########################################################################
 
-# Path of a directory where all the mCerebrum uploaded files will be stored before processing
-data_dir: "/home/ali/IdeaProjects/CerebralCortex-Platform/mount_points/apiserver/"
-
 apiserver:
   host: 0.0.0.0
   port: 8089
