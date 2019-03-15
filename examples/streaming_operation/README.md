@@ -1,7 +1,7 @@
 # CerebralCortex-kernel - Spark Streaming Example
 CerebralCortex accepts data from mCerebrum, process files, store data, and publish newly stored file names on Kafka message queue.
 In this example:
- - Example code makes call to CerebralCortex-APIServer to:
+ - Make call to CerebralCortex-APIServer to:
     - Authenticate a user
     - Register a new stream (`accelerometer--org.md2k.phonesensor--phone`)
     - Upload sample data
@@ -23,7 +23,7 @@ In this example:
     - Spark requires Java-8 installed
 
 ## Setup CerebralCortex
-- Follow instructions to install/configure CerebralCortex ([Click here to view instructions](https://github.com/MD2Korg/CerebralCortex))
+- Follow instructions to install/configure CerebralCortex ([Click here to view the instructions](https://github.com/MD2Korg/CerebralCortex))
 
     
 

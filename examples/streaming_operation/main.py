@@ -37,16 +37,40 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
+def add_gaussian_noise(pdf:pd.DataFrame):
+    """
+    Add gaussian noise to data
 
-def add_gaussian_noise(msg, cc_config_path):
+    Args:
+        pdf (pd.DataFrame): pandas dataframe
+
+    Returns:
+        pd.DataFrame: pandas dataframe
+
+    """
+    mu, sigma = 0, 0.1
+    pdf_total_rows = pdf.shape[0]
+    pdf_total_columns = pdf.shape[1]-2
+    noise = np.random.normal(mu, sigma, [pdf_total_rows, pdf_total_columns])
+
+    return pdf
+
+def process_save_stream(msg:dict, cc_config_path:str):
+    """
+    Process one of kafka messages, add gaussian noise to data and store data as a new stream
+
+    Args:
+        msg (dict): kafka message - {'filename': str, 'metadata_hash': str, "stream_name": str, "user_id": str}
+        cc_config_path (str): path of cerebralcortex configs
+
+    Notes:
+        This method creates CC object again. This code is running on worker node. Thus, it won't have access to CC object created in run()
+        CC object cannot be passed to worker nodes because it contains sockets and sockets cannot be serialized in spark to pass as a parameter
+
+    """
 
     # Disable pandas warnings
     warnings.simplefilter(action='ignore', category=FutureWarning)
-
-    '''
-    create CC object again. This code is running on worker node. Thus, it won't have access to CC object created in run()
-    CC object cannot be passed to worker nodes because it contains sockets and sockets cannot be serialized in spark to pass as a parameter
-    '''
 
     CC = Kernel(cc_config_path, enable_spark=False)
     stream_name = "phone_platform_annotation" #msg.get("stream_name") #TODO: get it from kafka msg
@@ -55,13 +79,7 @@ def add_gaussian_noise(msg, cc_config_path):
     data = pq.read_table(msg.get("filename"))
     pdf = data.to_pandas()
 
-    mu, sigma = 0, 0.1
-    pdf_total_rows = pdf.shape[0]
-    pdf_total_columns = pdf.shape[1]-2
-    noise = np.random.normal(mu, sigma, [pdf_total_rows, pdf_total_columns])
-    print(noise)
-
-    #signal = clean_signal + noise
+    pdf = add_gaussian_noise(pdf)
 
     new_stream_name = stream_name+"_gaussian_noise"
 
@@ -82,11 +100,30 @@ def add_gaussian_noise(msg, cc_config_path):
 
 
 def iterate_on_rdd(rdd, cc_config_path):
+    """
+    Iterate over an RDD and pass each kafka message in the RDD to process_save_stream method
+
+    Args:
+        rdd (RDD): pyspark RDD
+        cc_config_path (str): path of cerebralcortex configs
+    """
     records = rdd.map(lambda r: json.loads(r[1]))
-    result = records.map(lambda msg: add_gaussian_noise(msg, cc_config_path))
+    result = records.map(lambda msg: process_save_stream(msg, cc_config_path))
     print("File Iteration count:", result.count())
 
 def run():
+    """
+    This example:
+     - Make call to CerebralCortex-APIServer to:
+        - Authenticate a user
+        - Register a new stream (`accelerometer--org.md2k.phonesensor--phone`)
+        - Upload sample data
+     - Create Pyspark-Kafka direct stream
+     - Read parquet data and convert it into pandas dataframe
+     - Add gaussian noise in sample data
+     - Store noisy data as a new stream
+     - Retrieve and print noisy/clean data streams
+    """
 
     # create cerebralcortex object
     cc_config_path = "../../conf/"

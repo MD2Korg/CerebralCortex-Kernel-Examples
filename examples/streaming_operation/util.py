@@ -28,7 +28,22 @@ import requests
 import json
 from cerebralcortex.core.metadata_manager.stream.metadata import Metadata, DataDescriptor, ModuleMetadata
 
-def login_user(url, username, password):
+def login_user(url:str, username:str, password:str):
+    """
+    Send credentials to CC-ApiServer and Authenticate a user
+
+    Args:
+        url (str): url of login route of CC-ApiServer
+        username (str): username
+        password (str): password of the user
+
+    Returns:
+        dict: HTTP response.content
+
+    Raises:
+        Exception: if authentication fails
+
+    """
     try:
         data = {"username": str(username),"password": str(password)}
         headers = {"Accept": "application/json"}
@@ -38,15 +53,48 @@ def login_user(url, username, password):
     except Exception as e:
         raise Exception("Login failed. "+str(e))
 
-def register_stream(url, auth_token, stream_metadata):
+def register_stream(url:str, auth_token:str, stream_metadata:str):
+    """
+    Send stream metadata to CC-ApiServer for registration
+
+    Args:
+        url (str): url of stream-registration route of CC-ApiServer
+        auth_token (str): auth token of a user
+        stream_metadata (dict): metadata of the stream
+
+    Returns:
+        dict: HTTP response.content
+
+    Raises:
+        Exception: if stream registration fails
+
+
+    """
     try:
         headers = {"Accept": "application/json", "Authorization": auth_token}
         response = requests.post(url, json=stream_metadata, headers=headers)
         return json.loads(response.content)
     except Exception as e:
-        raise Exception("Login failed. "+str(e))
+        raise Exception("Stream registration failed. "+str(e))
 
-def upload_data(base_url, username, password, stream_metadata, data_file_path):
+def upload_stream_data(base_url:str, username:str, password:str, stream_metadata:dict, data_file_path:str):
+    """
+    Upload stream data to cerebralcortex storage using CC-ApiServer
+
+    Args:
+        base_url (str): base url of CerebralCortex-APIServer. For example, http://localhost/
+        username (str): username
+        password (str): password of the user
+        stream_metadata (dict): metadata of the stream
+        data_file_path (str): stream data file path that needs to be uploaded
+
+    Returns:
+        dict: HTTP response.content
+
+    Raises:
+        Exception: if stream data upload fails
+
+    """
     login_url = base_url+"api/v3/user/login"
     register_stream_url = base_url+"api/v3/stream/register"
 
@@ -64,10 +112,18 @@ def upload_data(base_url, username, password, stream_metadata, data_file_path):
 
         return json.loads(response.content)
     except Exception as e:
-        raise Exception("Login failed. "+str(e))
+        raise Exception("Stream data upload failed. "+str(e))
 
 
-def rest_api_client(api_url):
+def rest_api_client(base_url:str):
+    """
+    This is an example on how to upload data using CerebralCortex-APIServer upload stream data route
+
+    Args:
+        base_url (str): base url of CerebralCortex-APIServer. For example, http://localhost/
+
+    """
+
     stream_name = "accelerometer--org.md2k.phonesensor--phone"
 
     metadata = Metadata().set_name(stream_name).set_description("mobile phone accelerometer sensor data.") \
@@ -81,6 +137,6 @@ def rest_api_client(api_url):
         ModuleMetadata().set_name("cerebralcortex.streaming_operation.main").set_version("2.0.7").set_attribute("description", "data is collected using mcerebrum.").set_author(
             "test_user", "test_user@test_email.com"))
 
-    upload_data(api_url, "string", "string", metadata.to_json(), "/home/ali/IdeaProjects/MD2K_DATA/msgpack/6-5300c809-8c16-4576-b467-d638a609d4d8.msgpack.gz")
+    upload_stream_data(base_url, "string", "string", metadata.to_json(), "/home/ali/IdeaProjects/MD2K_DATA/msgpack/6-5300c809-8c16-4576-b467-d638a609d4d8.msgpack.gz")
 
 rest_api_client("http://0.0.0.0:8089/")
