@@ -27,39 +27,66 @@
 from cerebralcortex.core.util.spark_helper import get_or_create_sc
 from pyspark.streaming import StreamingContext
 from cerebralcortex.core.config_manager.config import Configuration
+from cerebralcortex.core.metadata_manager.stream.metadata import Metadata, DataDescriptor, ModuleMetadata
+from cerebralcortex.core.datatypes.datastream import DataStream
 from cerebralcortex.kernel import Kernel
 import numpy as np
 import json
+import warnings
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
 
-def add_gaussian_noise(msg):
+def add_gaussian_noise(msg, cc_config_path):
 
-    msg = msg[1] # TODO: msg should not be a tuple
-    if isinstance(msg, str):
-        msg = json.loads(msg)
+    # Disable pandas warnings
+    warnings.simplefilter(action='ignore', category=FutureWarning)
+
+    '''
+    create CC object again. This code is running on worker node. Thus, it won't have access to CC object created in run()
+    CC object cannot be passed to worker nodes because it contains sockets and sockets cannot be serialized in spark to pass as a parameter
+    '''
+
+    CC = Kernel(cc_config_path, enable_spark=False)
+    stream_name = "phone_platform_annotation" #msg.get("stream_name") #TODO: get it from kafka msg
+    user_id = "34b9a373-e0ed-3bec-bdd3-495095f2282c"#msg.get("user_id") #TODO: get it from kafka msg
 
     data = pq.read_table(msg.get("filename"))
-    df = data.to_pandas()
+    pdf = data.to_pandas()
+    pdf["user"] = user_id
 
     mu, sigma = 0, 0.1
     noise = np.random.normal(mu, sigma, [2,2])
     #signal = clean_signal + noise
 
-    df.to_csv("/home/ali/IdeaProjects/MD2K_DATA/tmp/dd.csv", sep=',')
-    print("*"*40,msg)
-    exit()
+    new_stream_name = stream_name+"_gaussian_noise"
 
-def iterate_on_rdd(rdd):
-    result = rdd.map(lambda msg: add_gaussian_noise(msg))
+    metadata = Metadata().set_name(new_stream_name).set_description("Gaussian noise added to the accel sensor stream.") \
+        .add_dataDescriptor(
+        DataDescriptor().set_attribute("description", "noisy accel x")) \
+        .add_dataDescriptor(
+        DataDescriptor().set_attribute("description", "noisy accel y")) \
+        .add_dataDescriptor(
+        DataDescriptor().set_attribute("description", "noisy accel z")) \
+        .add_module(
+        ModuleMetadata().set_name("cerebralcortex.streaming_operation.main").set_version("0.0.1").set_attribute("description", "Spark streaming example using CerebralCortex. This example adds gaussian noise to a stream data.").set_author(
+            "test_user", "test_user@test_email.com"))
+
+    ds = DataStream(data=pdf, metadata=metadata)
+    CC.save_stream(ds)
+
+
+def iterate_on_rdd(rdd, cc_config_path):
+    records = rdd.map(lambda r: json.loads(r[1]))
+    result = records.map(lambda msg: add_gaussian_noise(msg, cc_config_path))
     print("File Iteration count:", result.count())
 
 def run():
 
     # create cerebralcortex object
-    CC = Kernel("../../conf/", enable_spark_ui=True)
+    cc_config_path = "../../conf/"
+    CC = Kernel(cc_config_path, enable_spark_ui=True)
 
     if CC.config["messaging_service"]=="none":
         raise Exception("Messaging service is disabled (none) in cerebralcortex.yml. Please update configs.")
@@ -70,7 +97,7 @@ def run():
     ssc = StreamingContext(spark_context, int(CC.config["kafka"]["ping_kafka"]))
     kafka_files_stream = CC.MessagingQueue.create_direct_kafka_stream("filequeue", ssc)
     if kafka_files_stream is not None:
-        kafka_files_stream.foreachRDD(lambda rdd: iterate_on_rdd(rdd))
+        kafka_files_stream.foreachRDD(lambda rdd: iterate_on_rdd(rdd, cc_config_path))
 
     ssc.start()
     ssc.awaitTermination()
