@@ -30,6 +30,7 @@ from cerebralcortex.core.config_manager.config import Configuration
 from cerebralcortex.core.metadata_manager.stream.metadata import Metadata, DataDescriptor, ModuleMetadata
 from cerebralcortex.core.datatypes.datastream import DataStream
 from cerebralcortex.kernel import Kernel
+from examples.streaming_operation.util import rest_api_client
 import numpy as np
 import json
 import warnings
@@ -125,10 +126,14 @@ def run():
      - Retrieve and print noisy/clean data streams
     """
 
+    # upload sample data and publish messages on Kafka
+    rest_api_client("http://0.0.0.0:8089/")
+
     # create cerebralcortex object
     cc_config_path = "../../conf/"
     CC = Kernel(cc_config_path, enable_spark_ui=True)
 
+    # raise Exception
     if CC.config["messaging_service"]=="none":
         raise Exception("Messaging service is disabled (none) in cerebralcortex.yml. Please update configs.")
 
