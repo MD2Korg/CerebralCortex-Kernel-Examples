@@ -20,13 +20,6 @@ In this example:
 
 ## Setup CerebralCortex
 - Follow instructions to install/configure CerebralCortex ([Click here to view instructions](https://github.com/MD2Korg/CerebralCortex))
-- Open [http://localhost/api/v2/docs/](http://localhost/api/v2/docs/)
-- Click on `user : Authentication service` to expand it.
-    - Click on `POST /user/register` and register a user. Simply click on `ModelExample Value` box, it will copy json data in text box. Click on Try it out. This should register a user with `username=string` and `password=string`
-    - Click on `POST /user/login` to get auth token. Simply click on `ModelExample Value` box, it will copy json data in text box. Click on Try it out. This should auth token under `Response Body`
-- Click on `stream : Data and annotation streams` to expand it.
-    - Click on `POST /stream/register` to register a stream. Simply click on `ModelExample Value` box, it will copy json data in text box. Click on Try it out. This should register a new stream with the name of `string`. Under `Response Body`, there will be `hash_id`. 
-    - Click on `PUT /stream/{metadata_hash}` to upload data. Paste `hash_id` in the `metadata_hash` field and `auth token` in the field of `Authorization`. Browse and upload a sample data file located in `CerebralCortex-Kernel-Examples/raw_data/XXX.gz`. If everything goes fine, under `Response Body` a success message will appear.
 
     
 
@@ -46,4 +39,6 @@ In this example:
     - `sh run.sh`
 
 If everything works well then example code will produce similar output on console as below:
+
+`TODO - Provide sample output`
 
