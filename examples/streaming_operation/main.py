@@ -54,10 +54,13 @@ def add_gaussian_noise(msg, cc_config_path):
 
     data = pq.read_table(msg.get("filename"))
     pdf = data.to_pandas()
-    pdf["user"] = user_id
 
     mu, sigma = 0, 0.1
-    noise = np.random.normal(mu, sigma, [2,2])
+    pdf_total_rows = pdf.shape[0]
+    pdf_total_columns = pdf.shape[1]-2
+    noise = np.random.normal(mu, sigma, [pdf_total_rows, pdf_total_columns])
+    print(noise)
+
     #signal = clean_signal + noise
 
     new_stream_name = stream_name+"_gaussian_noise"
@@ -73,6 +76,7 @@ def add_gaussian_noise(msg, cc_config_path):
         ModuleMetadata().set_name("cerebralcortex.streaming_operation.main").set_version("0.0.1").set_attribute("description", "Spark streaming example using CerebralCortex. This example adds gaussian noise to a stream data.").set_author(
             "test_user", "test_user@test_email.com"))
 
+    pdf["user"] = user_id
     ds = DataStream(data=pdf, metadata=metadata)
     CC.save_stream(ds)
 
