@@ -30,7 +30,7 @@ from cerebralcortex.core.config_manager.config import Configuration
 from cerebralcortex.core.metadata_manager.stream.metadata import Metadata, DataDescriptor, ModuleMetadata
 from cerebralcortex.core.datatypes.datastream import DataStream
 from cerebralcortex.kernel import Kernel
-from examples.streaming_operation.util import rest_api_client
+#from examples.streaming_operation.util import rest_api_client
 import numpy as np
 import json
 import warnings
@@ -48,12 +48,18 @@ def add_gaussian_noise(pdf:pd.DataFrame):
     Returns:
         pd.DataFrame: pandas dataframe
 
+    Notes:
+        Privacy layer for data could be added here. For example, adding noise in data before storing.
+
     """
     mu, sigma = 0, 0.1
     pdf_total_rows = pdf.shape[0]
     pdf_total_columns = pdf.shape[1]-2
     noise = np.random.normal(mu, sigma, [pdf_total_rows, pdf_total_columns])
 
+    pdf["accelerometer_x"] = pdf["accelerometer_x"]+noise[:,0]
+    pdf["accelerometer_y"] = pdf["accelerometer_y"]+noise[:,1]
+    pdf["accelerometer_z"] = pdf["accelerometer_z"]+noise[:,2]
     return pdf
 
 def process_save_stream(msg:dict, cc_config_path:str):
@@ -74,10 +80,19 @@ def process_save_stream(msg:dict, cc_config_path:str):
     warnings.simplefilter(action='ignore', category=FutureWarning)
 
     CC = Kernel(cc_config_path, enable_spark=False)
-    stream_name = "phone_platform_annotation" #msg.get("stream_name") #TODO: get it from kafka msg
-    user_id = "34b9a373-e0ed-3bec-bdd3-495095f2282c"#msg.get("user_id") #TODO: get it from kafka msg
+    cc_config = CC.config
+    stream_name = msg.get("stream_name")
+    user_id = msg.get("user_id")
 
-    data = pq.read_table(msg.get("filename"))
+
+    if cc_config["nosql_storage"] == "filesystem":
+        file_name = str(cc_config["filesystem"]["filesystem_path"])+msg.get("filename")
+    elif cc_config["nosql_storage"] == "hdfs":
+        file_name = str(cc_config["hdfs"]["raw_files_dir"])+msg.get("filename")
+    else:
+        raise Exception(str(cc_config["nosql_storage"]) + " is not supported. Please use filesystem or hdfs.")
+
+    data = pq.read_table(file_name)
     pdf = data.to_pandas()
 
     pdf = add_gaussian_noise(pdf)
@@ -127,12 +142,13 @@ def run():
     """
 
     # upload sample data and publish messages on Kafka
-    rest_api_client("http://0.0.0.0:8089/")
+    #rest_api_client("http://0.0.0.0:8089/")
 
     # create cerebralcortex object
     cc_config_path = "../../conf/"
     CC = Kernel(cc_config_path, enable_spark_ui=True)
-
+    sample_stream_name = "accelerometer--org.md2k.phonesensor--phone"
+    
     # raise Exception
     if CC.config["messaging_service"]=="none":
         raise Exception("Messaging service is disabled (none) in cerebralcortex.yml. Please update configs.")
@@ -146,8 +162,17 @@ def run():
         kafka_files_stream.foreachRDD(lambda rdd: iterate_on_rdd(rdd, cc_config_path))
 
     ssc.start()
-    ssc.awaitTermination()
+    ssc.awaitTermination(timeout=7)
+    ssc.stop()
 
+    CC = Kernel(cc_config_path, enable_spark_ui=True)
+    print("*"*15,"CLEAN DATA","*"*15)
+    ds_clean = CC.get_stream(stream_name=sample_stream_name)
+    ds_clean.show(5, truncate=False)
+
+    print("*"*15,"NOISY DATA","*"*15)
+    ds_noise = CC.get_stream(stream_name=sample_stream_name+"_gaussian_noise")
+    ds_noise.show(5, truncate=False)
 
 
 

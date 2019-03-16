@@ -36,15 +36,3 @@ import_dir(
     data_parser=csv_data_parser,
     gen_report=True
 )
-
-###             UNCOMMENT BELOW CODE TO VIEW INGESTED SAMPLE STREAM             ###
-
-# from cerebralcortex import Kernel
-#
-# # create CC Kernel object
-# CC = Kernel("../../conf/")
-#
-# # get stream data
-# gps_stream = CC.get_stream("demo-location-data-stream")
-#
-# gps_stream.show(truncate=False)
