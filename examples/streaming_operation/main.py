@@ -30,7 +30,8 @@ from cerebralcortex.core.config_manager.config import Configuration
 from cerebralcortex.core.metadata_manager.stream.metadata import Metadata, DataDescriptor, ModuleMetadata
 from cerebralcortex.core.datatypes.datastream import DataStream
 from cerebralcortex.kernel import Kernel
-#from examples.streaming_operation.util import rest_api_client
+from cerebralcortex.core.metadata_manager.stream.metadata import Metadata, DataDescriptor, ModuleMetadata
+from cerebralcortex_rest import client
 import numpy as np
 import json
 import warnings
@@ -127,6 +128,43 @@ def iterate_on_rdd(rdd, cc_config_path):
     result = records.map(lambda msg: process_save_stream(msg, cc_config_path))
     print("File Iteration count:", result.count())
 
+def upload_stream_data(base_url:str, username:str, password:str, stream_name:str, data_file_path:str):
+    """
+    Upload stream data to cerebralcortex storage using CC-ApiServer
+
+    Args:
+        base_url (str): base url of CerebralCortex-APIServer. For example, http://localhost/
+        username (str): username
+        password (str): password of the user
+        data_file_path (str): stream data file path that needs to be uploaded
+
+    Raises:
+        Exception: if stream data upload fails
+
+    """
+
+    login_url = base_url+"api/v3/user/login"
+    register_stream_url = base_url+"api/v3/stream/register"
+
+    metadata = Metadata().set_name(stream_name).set_description("mobile phone accelerometer sensor data.") \
+        .add_dataDescriptor(
+        DataDescriptor().set_name("accelerometer_x").set_type("float").set_attribute("description", "acceleration minus gx on the x-axis")) \
+        .add_dataDescriptor(
+        DataDescriptor().set_name("accelerometer_y").set_type("float").set_attribute("description", "acceleration minus gy on the y-axis")) \
+        .add_dataDescriptor(
+        DataDescriptor().set_name("accelerometer_z").set_type("float").set_attribute("description", "acceleration minus gz on the z-axis")) \
+        .add_module(
+        ModuleMetadata().set_name("cerebralcortex.streaming_operation.main").set_version("2.0.7").set_attribute("description", "data is collected using mcerebrum.").set_author(
+            "test_user", "test_user@test_email.com"))
+
+    stream_metadata = metadata.to_json()
+
+    auth = client.login_user(login_url, username, password)
+    status = client.register_stream(register_stream_url, auth.get("auth_token"), stream_metadata)
+    stream_upload_url = base_url+"api/v3/stream/"+status.get("hash_id")
+    result = client.upload_stream_data(stream_upload_url, auth.get("auth_token"), data_file_path)
+    print(result)
+
 def run():
     """
     This example:
@@ -148,7 +186,9 @@ def run():
     cc_config_path = "../../conf/"
     CC = Kernel(cc_config_path, enable_spark_ui=True)
     sample_stream_name = "accelerometer--org.md2k.phonesensor--phone"
-    
+
+    upload_stream_data("http://localhost/", "string", "string",sample_stream_name, "../../resources/sample_data/msgpack_files/phone_accel.msgpack.gz")
+
     # raise Exception
     if CC.config["messaging_service"]=="none":
         raise Exception("Messaging service is disabled (none) in cerebralcortex.yml. Please update configs.")
