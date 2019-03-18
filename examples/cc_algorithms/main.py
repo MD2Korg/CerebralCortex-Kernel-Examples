@@ -25,21 +25,61 @@
 
 from cerebralcortex import Kernel
 from cerebralcortex.algorithms import gps_clusters
+from examples.util.data_helper import gen_location_datastream
 
-'''
-Note: this example requires GPS stream data to work.
-TODO: provide a sample GPS stream data for test purposes 
-'''
 
-# create CC Kernel object
-CC = Kernel("../../conf/")
+class Examples:
+    def __init__(self):
+        """
+        load/set example params/data. This example perform following operations:
+            - create sample phone battery data stream
+            - perform windowing operation on the stream
+            - store windowed data asa new stream
+        Args:
+            example_name: windowing
 
-# get stream data
-gps_stream = CC.get_stream("LOCATION--org.md2k.phonesensor--PHONE")
+        Notes:
+            this example generatess ome random gps coordinates of Memphis, TN
+        """
 
-# apply GPS clustering algorithm
-centroids = gps_stream.groupby("owner").compute(gps_clusters)
+        self.setup_example()
 
-# print the centroids
-print("*"*10, " CLUSTER CENTROIDS COORDINATES ", "*"*10)
-centroids.show(truncate=False)
+        self.gps_clustering()
+
+    def setup_example(self):
+        """
+        setup required params for the example:
+            - create cerebralcortex-kernel object
+            - generate sample phone-battery data/metadata
+            - create a DataStream object
+            - save sample stream using cerebralcortex-kernel.
+        """
+        # create cerebralcortex object
+        self.CC = Kernel("../../conf/")
+
+        # sample data params
+        self.stream_name="LOCATION--org.md2k.phonesensor--PHONE"
+        self.user_id = "00000000-afb8-476e-9872-6472b4e66b68"
+
+        # generate sample phone-battery data/metadata
+        ds = gen_location_datastream(user_id=self.user_id, stream_name=self.stream_name)
+
+        # save sample data using cerebralcortex-kernal.
+        # now we have some sample data stored in CerebralCortex format to play with!!!
+        self.CC.save_stream(ds)
+
+    def gps_clustering(self):
+        # create CC Kernel object
+
+        # get stream data
+        gps_stream = self.CC.get_stream("LOCATION--org.md2k.phonesensor--PHONE")
+
+        # apply GPS clustering algorithm
+        centroids = gps_stream.groupby("user").compute(gps_clusters)
+
+        # print the centroids
+        print("*"*10, " CLUSTER CENTROIDS COORDINATES ", "*"*10)
+        centroids.show(truncate=False)
+
+if __name__=="__main__":
+    Examples()
