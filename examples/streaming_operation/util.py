@@ -139,4 +139,4 @@ def rest_api_client(base_url:str):
 
     upload_stream_data(base_url, "string", "string", metadata.to_json(), "/home/ali/IdeaProjects/MD2K_DATA/msgpack/6-5300c809-8c16-4576-b467-d638a609d4d8.msgpack.gz")
 
-rest_api_client("http://0.0.0.0:8089/")
+rest_api_client("http://localhost/")

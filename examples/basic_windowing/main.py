@@ -83,13 +83,13 @@ class Examples:
         # get sample stream data
         ds = self.CC.get_stream(self.stream_name)
 
-        ds.window(windowDuration=60)
-        ds.show(5)
+        new_ds = ds.window(windowDuration=60)
+        new_ds.show(5)
 
         # save newly create data as a new stream in cerebralcortex
         new_stream_name = "BATTERY--org.md2k.phonesensor--PHONE-windowed-data"
 
-        ds.metadata.set_name(new_stream_name).set_description("1 minute windowed data of phone battery with average battery levels of each window.") \
+        new_ds.metadata.set_name(new_stream_name).set_description("1 minute windowed data of phone battery with average battery levels of each window.") \
             .add_dataDescriptor(
             DataDescriptor().set_attribute("description", "start/end time of a window")) \
             .add_dataDescriptor(
@@ -98,9 +98,8 @@ class Examples:
             ModuleMetadata().set_name("cerebralcortex.examples.main").set_version("0.1.2").set_attribute("description", "CerebralCortex-kernel example code to window phone battery data").set_author(
                 "test_user", "test_user@test_email.com"))
 
-        if self.CC.save_stream(ds):
+        if self.CC.save_stream(new_ds):
             print(new_stream_name, "has been stored.\n\n")
-
 
 
 if __name__=="__main__":
