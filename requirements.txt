@@ -1,4 +1,4 @@
-cerebralcortex-kernel==3.0.0.post17
+cerebralcortex-kernel==3.0.0.post20
 cerebralcortex-restclient==3.0.0a2
 PyYAML==4.2b1
 kafka-python==1.4.5
