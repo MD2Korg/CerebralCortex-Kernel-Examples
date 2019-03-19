@@ -145,7 +145,19 @@ def upload_stream_data(base_url:str, username:str, password:str, stream_name:str
 
     login_url = base_url+"api/v3/user/login"
     register_stream_url = base_url+"api/v3/stream/register"
-
+    user_metadata = {
+        "username": username,
+        "password": password,
+        "user_role": "demo-user",
+        "user_metadata": {
+            "key": "demo-md",
+            "value": "demo-vmd"
+        },
+        "user_settings": {
+            "key": "string",
+            "value": "string"
+        }
+    }
     metadata = Metadata().set_name(stream_name).set_description("mobile phone accelerometer sensor data.") \
         .add_dataDescriptor(
         DataDescriptor().set_name("accelerometer_x").set_type("float").set_attribute("description", "acceleration minus gx on the x-axis")) \
@@ -158,11 +170,16 @@ def upload_stream_data(base_url:str, username:str, password:str, stream_name:str
             "test_user", "test_user@test_email.com"))
 
     stream_metadata = metadata.to_json()
+    user_registration_url = base_url+"api/v3/user/register"
+    client.register_user(url=user_registration_url, user_metadata=user_metadata)
 
     auth = client.login_user(login_url, username, password)
+
     status = client.register_stream(register_stream_url, auth.get("auth_token"), stream_metadata)
+
     stream_upload_url = base_url+"api/v3/stream/"+status.get("hash_id")
     result = client.upload_stream_data(stream_upload_url, auth.get("auth_token"), data_file_path)
+
     print(result)
 
 def run():
@@ -187,13 +204,13 @@ def run():
     CC = Kernel(cc_config_path, enable_spark_ui=True)
     sample_stream_name = "accelerometer--org.md2k.phonesensor--phone"
 
-    upload_stream_data("http://localhost/", "string", "string",sample_stream_name, "../../resources/sample_data/msgpack_files/phone_accel.msgpack.gz")
+    upload_stream_data("http://localhost/", "demo", "demo",sample_stream_name, "../../resources/sample_data/msgpack_files/phone_accel.msgpack.gz")
 
     # raise Exception
     if CC.config["messaging_service"]=="none":
         raise Exception("Messaging service is disabled (none) in cerebralcortex.yml. Please update configs.")
 
-    # Kafka Consumer Configs
+    # Kafka Consumer Configs    print("*"*100, type(user_metadata))
     spark_context = get_or_create_sc(type="sparkContext")
 
     ssc = StreamingContext(spark_context, int(CC.config["kafka"]["ping_kafka"]))
