@@ -24,6 +24,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from cerebralcortex.data_importer.data_parsers import csv_data_parser
+from cerebralcortex.data_importer.metadata_parsers import mcerebrum_metadata_parser
 from cerebralcortex.data_importer import import_dir
 
 
@@ -32,6 +33,8 @@ import_dir(
     input_data_dir="sample_data/",
     user_id='976b5f6f-d8d3-47fc-af6a-5ba805918e6d',
     header=None,
+    #allowed_filename_pattern="demo-location-data-stream",
+    metadata_parser=mcerebrum_metadata_parser,
     data_file_extension=[".csv"],
     data_parser=csv_data_parser,
     gen_report=True
