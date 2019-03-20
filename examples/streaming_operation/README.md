@@ -49,9 +49,7 @@ filesystem:
 
 ## How to run the example code?
     - `cd CerebralCortex-Kernel-Examples/examples/streaming_operation`
-    - `sh run.sh`
-
-If everything works well then example code will produce similar output on console as below:
+    - `sh run.sh`    
 
 ```
 *************** CLEAN DATA ***************
