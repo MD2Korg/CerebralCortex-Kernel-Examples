@@ -34,6 +34,7 @@ from cerebralcortex.core.metadata_manager.stream.metadata import Metadata, DataD
 from cerebralcortex_rest import client
 import numpy as np
 import json
+import os
 import warnings
 import pandas as pd
 import pyarrow as pa
@@ -93,27 +94,30 @@ def process_save_stream(msg:dict, cc_config_path:str):
     else:
         raise Exception(str(cc_config["nosql_storage"]) + " is not supported. Please use filesystem or hdfs.")
 
-    data = pq.read_table(file_name)
-    pdf = data.to_pandas()
+    if os.path.exists(file_name):
+        data = pq.read_table(file_name)
+        pdf = data.to_pandas()
 
-    pdf = add_gaussian_noise(pdf)
+        pdf = add_gaussian_noise(pdf)
 
-    new_stream_name = stream_name+"_gaussian_noise"
+        new_stream_name = stream_name+"_gaussian_noise"
 
-    metadata = Metadata().set_name(new_stream_name).set_description("Gaussian noise added to the accel sensor stream.") \
-        .add_dataDescriptor(
-        DataDescriptor().set_attribute("description", "noisy accel x")) \
-        .add_dataDescriptor(
-        DataDescriptor().set_attribute("description", "noisy accel y")) \
-        .add_dataDescriptor(
-        DataDescriptor().set_attribute("description", "noisy accel z")) \
-        .add_module(
-        ModuleMetadata().set_name("cerebralcortex.streaming_operation.main").set_version("0.0.1").set_attribute("description", "Spark streaming example using CerebralCortex. This example adds gaussian noise to a stream data.").set_author(
-            "test_user", "test_user@test_email.com"))
+        metadata = Metadata().set_name(new_stream_name).set_description("Gaussian noise added to the accel sensor stream.") \
+            .add_dataDescriptor(
+            DataDescriptor().set_attribute("description", "noisy accel x")) \
+            .add_dataDescriptor(
+            DataDescriptor().set_attribute("description", "noisy accel y")) \
+            .add_dataDescriptor(
+            DataDescriptor().set_attribute("description", "noisy accel z")) \
+            .add_module(
+            ModuleMetadata().set_name("cerebralcortex.streaming_operation.main").set_version("0.0.1").set_attribute("description", "Spark streaming example using CerebralCortex. This example adds gaussian noise to a stream data.").set_author(
+                "test_user", "test_user@test_email.com"))
 
-    pdf["user"] = user_id
-    ds = DataStream(data=pdf, metadata=metadata)
-    CC.save_stream(ds)
+        pdf["user"] = user_id
+        ds = DataStream(data=pdf, metadata=metadata)
+        CC.save_stream(ds)
+    else:
+        print(file_name, "does not exist.")
 
 
 def iterate_on_rdd(rdd, cc_config_path):
@@ -219,7 +223,7 @@ def run():
         kafka_files_stream.foreachRDD(lambda rdd: iterate_on_rdd(rdd, cc_config_path))
 
     ssc.start()
-    ssc.awaitTermination(timeout=7)
+    ssc.awaitTermination(timeout=15)
     ssc.stop()
 
     CC = Kernel(cc_config_path, enable_spark_ui=True)
