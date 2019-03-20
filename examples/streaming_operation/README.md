@@ -19,7 +19,7 @@ In this example:
     - Download and extract [Spark 2.4](https://spark.apache.org/downloads.html)
         - `cd ~/`
         - `wget http://apache.claz.org/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz` 
-        - `tar -xzf spark*.tar.gz`
+        - `tar -xzf spark-2.4.0-bin-hadoop2.7.tgz`
     - Spark requires Java-8 installed
 
 ## Setup CerebralCortex
@@ -41,6 +41,9 @@ In this example:
 filesystem:
   filesystem_path: PATH-OF-CEREBRALCORTEX/mount_points/apiserver/
 ```
+
+*Note*:  `PATH-OF-CEREBRALCORTEX` is the path where you cloned CerebralCortex repo.
+
 - update spark path in `CerebralCortex-Kernel-Examples/streaming_operation/run.sh`
     - `export SPARK_HOME=/MAIN-DIR-PATH/spark-2.4.0-bin-hadoop2.7`
 

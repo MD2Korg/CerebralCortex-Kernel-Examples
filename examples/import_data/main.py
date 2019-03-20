@@ -34,7 +34,7 @@ import_dir(
     user_id='976b5f6f-d8d3-47fc-af6a-5ba805918e6d',
     header=None,
     #allowed_filename_pattern="demo-location-data-stream",
-    metadata_parser=mcerebrum_metadata_parser,
+    #metadata_parser=mcerebrum_metadata_parser,
     data_file_extension=[".csv"],
     data_parser=csv_data_parser,
     gen_report=True

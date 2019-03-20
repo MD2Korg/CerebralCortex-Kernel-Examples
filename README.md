@@ -11,7 +11,7 @@ This directory contains some of the following examples on how to get/save data s
     - Download and extract [Spark 2.4](https://spark.apache.org/downloads.html)
         - `cd ~/`
         - `wget http://apache.claz.org/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz` 
-        - `tar -xzf spark*.tar.gz`
+        - `tar -xzf spark-2.4.0-bin-hadoop2.7.tgz`
     - Spark requires Java-8 installed
 
 * MySQL > 5.7 (distribution number)
