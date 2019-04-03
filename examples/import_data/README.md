@@ -37,6 +37,3 @@ This directory contains some of the following example on how to import data in C
     
     - Open main.py update parameters
     - `python main.py`
-    
-    He asked me to write in recommendation letter that your worked help to attract more funding
-    Santosh!!!
